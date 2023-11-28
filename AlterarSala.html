@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Alterar Sala</title>
+<script>
+function EnviarCPF() {
+            let upc = document.getElementById("cpfPede").value;
+            console.log("CPF: " + cpf );
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log("Chegou a resposta OK: " + this.responseText);
+                    document.getElementById("msg").innerHTML = this.responseText;
+                    let objReturn = JSON.parse(this.responseText);
+                    document.getElementById("id").value = objReturn.id;
+                    document.getElementById("cpf").value = objReturn.cpf;
+                    document.getElementById("sala").value = objReturn.sala;
+                    document.getElementById("Pedir").style.display = "none";
+                    document.getElementById("Alterar").style.display = "block";
+                } else
+                if (this.readyState < 4) {
+                    console.log("3: " + this.readyState);
+                } else
+                    console.log("Requisicao falhou: " + this.status);
+            }
+            xmlhttp.open("GET", "http://localhost/3daw/ex60_GetProdutoByUpc.php?upc=" + upc);
+            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+             xmlhttp.send();
+            console.log("enviei form");
+            console.log("5");
+        }
+
+        function EnviarProduto() {
+            let objForm = document.getElementById("formProduto");
+            console.log("objForm: " + objForm.innerHTML);
+            let cpf = document.getElementById("cpf").value;
+            let sala = document.getElementById("sala").value;
+            console.log("CPF: " + upc + " Sala: " + sala);
+            let objForm2 = {"CPF: " + upc + "Sala: " + sala};
+            let objJson = JSON.stringify(objForm);
+            console.log("objForm2: " + objForm2);
+            console.log("JSON: " + objJson);
+
+            let xmlhttp = new XMLHttpRequest();
+            console.log("1");
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log("Chegou a resposta OK: " + this.responseText);
+                    console.log("2");
+                    document.getElementById("msg").innerHTML = this.responseText;
+                } else
+                if (this.readyState < 4) {
+                    console.log("3: " + this.readyState);
+                } else
+                    console.log("Requisicao falhou: " + this.status);
+            }
+            console.log("4");
+            xmlhttp.open("POST", "http://localhost/3daw/ex60_AlteraProduto.php");
+            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlhttp.send("matricula=" + matricula + "&nome=" + nome + "&email=" + email);
+            console.log("enviei form");
+            console.log("5");
+        }
+   
+</script>
+</head>
+<body>
+<div id="pedir" style="display:block">
+    <form action="" method=POST name="formAluno" id="formAluno">
+        CPF: <input type=nome name="cpfPede" id="cpfPede" required> <br>
+        <br><br>
+        <input type="button" value="Pedir" onclick="return EnviarCPF();">
+    </form>
+</div>
+<div id="alterar" style="display:none">
+    <form action="" method=POST name="formAltera" id="formAltera">
+        <input type=hidden name="id" id="id" value="0">
+        Sala de Prova: <input type=number name="sala" id="sala" value=""> <br>
+        <br><br>
+        <input type="button" value="Alterar" id='btnSend' onclick="EnviarAluno();">
+    </form>
+</div>
+<p id="msg"></p>
+<br>
+</body>
+</html>
